@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getNotes } from "@/redux/Notes/note.actions";
 import { IoMdAdd } from "react-icons/io";
 import NoteCard from "@/components/NotePage/Notecards/NoteCard";
-import Popup from "./Popup";
+// import Popup from "./Popup";
 
 export default function AllNotes() {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ export default function AllNotes() {
           />
         ))}
 
-        {showPopup && (<Popup />)}
+        {/* {showPopup && (<Popup />)} */}
       </div>
       <div className="flex items-right justify-end mb-2 mr-2">
         <IoMdAdd size={50} className="absolute bg-green-500 " />

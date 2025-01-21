@@ -79,14 +79,15 @@ export const updateNotes = (updateNoteData, id) => async (dispatch) => {
   const token = store.getState().userReducer.token;
   dispatch({ type: UPDATE_NOTES_LOADING });
   try {
-    const response = await axios.patch(BASE_URL + `/note/update/${id}`, {
-      method: "patch",
-      data: updateNoteData,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        id: id,
-      },
-    });
+    const response = await axios.patch(
+      `${BASE_URL}/note/update/${id}`,
+      updateNoteData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     const { status, message, data } = response.data;
     console.log("console log : ", message);
