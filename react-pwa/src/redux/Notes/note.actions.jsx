@@ -9,44 +9,37 @@ import {
   GET_NOTES_ERROR,
   GET_NOTES_LOADING,
   GET_NOTES_SUCCESS,
-  //   LOGIN_NOTE_ERROR,
-  //   LOGIN_NOTE_SUCCESS,
   UPDATE_NOTES_ERROR,
   UPDATE_NOTES_LOADING,
   UPDATE_NOTES_SUCCESS,
 } from "./note.types";
 import { toast } from "react-toastify";
-import noteReducer from "./note.reducer";
 import { BASE_URL } from "@/constants/config";
 import { store } from "../store";
 import { useSelector } from "react-redux";
 
-const token = store.getState().userReducer; // Get token from Redux state
-console.log("token : ", token);
-console.log(store.getState());
-
+const token = store.getState().userReducer;
+console.log("token : ", token.token);
 
 export const getNotes = () => async (dispatch) => {
-    const token = store.getState().userReducer.token; // Get token from userReducer
+    const token = store.getState().userReducer.token;
     if (!token) {
       console.error("Token is null or undefined. User might not be logged in.");
       return;
-    }
-  
-    dispatch({ type: GET_NOTES_LOADING });
-  
+    }  
     try {
-      const response = await axios.get(BASE_URL + "/note/notes", {
+      const response = await axios.get(`${BASE_URL}/note/notes`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Pass token in headers
+          Authorization: `Bearer ${token}`,
         },
       });
+      console.log("response get All : ",response.data.data);
   
       const { status, data } = response.data;
       if (status === 1) {
         dispatch({ type: GET_NOTES_SUCCESS, payload: data });
-        localStorage.setItem("authToken", token); // Save token in localStorage
-        dispatch({ type: GET_NOTES_SUCCESS, payload: token });
+        localStorage.setItem("authToken", token);
+        dispatch({ type: GET_NOTES_SUCCESS, payload: data });
         toast.success("Login successful!");
       } else {
         dispatch({ type: GET_NOTES_ERROR });
@@ -59,14 +52,14 @@ export const getNotes = () => async (dispatch) => {
   
 
 export const createNotes = (createNoteData) => async (dispatch) => {
-  const token = store.getState().noteReducer;
+  const token = store.getState().userReducer.token;
   dispatch({ type: CREATE_NOTES_LOADING });
   try {
     const response = await axios.post(BASE_URL + "/note/create", {
       method: "post",
       data: createNoteData,
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -83,14 +76,14 @@ export const createNotes = (createNoteData) => async (dispatch) => {
 };
 
 export const updateNotes = (updateNoteData, id) => async (dispatch) => {
-  const token = store.getState().noteReducer;
+  const token = store.getState().userReducer.token;
   dispatch({ type: UPDATE_NOTES_LOADING });
   try {
-    const response = await axios.patch(BASE_URL + "/note/update/${id}", {
+    const response = await axios.patch(BASE_URL + `/note/update/${id}`, {
       method: "patch",
       data: updateNoteData,
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
         id: id,
       },
     });
@@ -108,18 +101,18 @@ export const updateNotes = (updateNoteData, id) => async (dispatch) => {
 };
 
 export const deleteNotes = (id) => async (dispatch) => {
-  const token = store.getState().noteReducer;
+  const token = store.getState().userReducer.token;
   dispatch({ type: DELETE_NOTES_LOADING });
   try {
-    const response = await axios.delete(BASE_URL + "/note/delete/${id}", {
+    const response = await axios.delete(BASE_URL + `/note/delete/${id}`, {
       method: "delete",
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
         id: id,
       },
     });
 
-    const { status, message, data } = response.data;
+    const { status, message } = response.data;
     console.log("console log : ", message);
     if (status === 1) {
       dispatch({ type: DELETE_NOTES_SUCCESS });

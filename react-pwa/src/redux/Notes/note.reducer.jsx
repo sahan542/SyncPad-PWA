@@ -10,16 +10,16 @@ const initialState = {
 }
 
 export default function noteReducer(state=initialState,action) {
-    const {type, payload} = action
-    switch(type){
+    switch(action.type){
         case GET_NOTES_LOADING:{
             return {
-                ...state, loading: true
+                ...state, loading: true, error: null
             }
         }
         case GET_NOTES_SUCCESS:{
+            // console.log("Payload in GET_NOTES_SUCCESS:", payload); 
             return {
-                ...state, loading: false, error: false, data: payload
+                ...state, loading: false, error: false, data: action.payload
             }
         }
         case GET_NOTES_ERROR:{
