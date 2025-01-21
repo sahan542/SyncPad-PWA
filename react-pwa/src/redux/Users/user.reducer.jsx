@@ -1,4 +1,4 @@
-import { LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, LOGOUT_USER_SUCCESS } from "./user.types";
+import { LOGIN_USER_SUCCESS, LOGIN_USER_ERROR,LOGOUT } from "./user.types";
 
 // Retrieve token from localStorage when initializing the app
 const persistedToken = localStorage.getItem("authToken");
@@ -28,8 +28,13 @@ const userReducer = (state = initialState, action) => {
         loading: false,
         error: true,
       };
-      case LOGOUT_USER_SUCCESS:{
-        return initialState
+      case LOGOUT:{
+        return {
+          token:  null,
+          auth: null,
+          loading: false,
+          error: false,
+        }
       }
 
     default:
